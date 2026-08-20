@@ -19,6 +19,7 @@ config/icon="res://assets/icon.svg"
 Constants="*uid://c430m3k823r8j"
 Globals="*uid://gaonaf7e6wry"
 Enums="*uid://cqqffja6storb"
+Auth="*uid://wkgeh0xg2axt"
 
 [display]
 
