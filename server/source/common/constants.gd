@@ -4,6 +4,11 @@ extends Node
 const MAPS_DATA_DIRECTORY: String = ""
 
 
+const DATABASE_PATH: String = "user://database/"
+const DATABASE_FILENAME: String = "database"
+const DATABASE_POLL_TIME: int = 1
+
+
 const NETWORK_HOST: String = "0.0.0.0"
 const NETWORK_PORT: int = 7001
 

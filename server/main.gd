@@ -22,11 +22,23 @@ func _ready() -> void:
 
 
 func _setup_database() -> bool:
+	print("Iniciando SQLite...")
+
+	var err: Error = Database.create(
+		Constants.DATABASE_PATH,
+		Constants.DATABASE_FILENAME
+	)
+
+	if err!= OK:
+		push_error("Erro ao iniciar o sqlite (%s)." % error_string(err))
+		return false
+
+	print("SQLite iniciado com sucesso!")
 	return true
 
 
 func _setup_network() -> bool:
-	print("[NETWORK] Iniciando servidor em %s:%d (máx. %d clientes)..." % [
+	print("Iniciando servidor em %s:%d (máx. %d clientes)..." % [
 		Constants.NETWORK_HOST,
 		Constants.NETWORK_PORT,
 		Constants.MAX_PEERS,
@@ -34,10 +46,10 @@ func _setup_network() -> bool:
 
 	var err: Error = Network.start()
 	if err != OK:
-		push_error("[NETWORK] Erro ao iniciar o servidor (%s)." % error_string(err))
+		push_error("Erro ao iniciar o servidor (%s)." % error_string(err))
 		return false
 
-	print("[NETWORK] Servidor iniciado com sucesso!")
+	print("Servidor iniciado com sucesso!")
 	return true
 
 
