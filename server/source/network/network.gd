@@ -30,6 +30,14 @@ func stop() -> Error:
 	return network.stop()
 
 
+func register(remote_funcs: Array[Callable]) -> Error:
+	return network.register(remote_funcs)
+
+
+func unregister(remote_funcs: Array[Callable]) -> Error:
+	return network.unregister(remote_funcs)
+
+
 func exec(target: Variant, fn_path: StringName, args: Array = []) -> Error:
 	return network.exec(target, fn_path, args)
 

@@ -3,20 +3,18 @@ class_name AuthRepository
 
 
 var _database: Database
-var _accounts: Accounts
 
 
-func _init(database: Database, accounts: Accounts) -> void:
+func _init(database: Database) -> void:
 	_database = database
-	_accounts = accounts
 
 
-func sign_in(email: String, password: String) -> Account:
+func sign_in(email: String, password: String) -> Array:
 	if not _is_email_valid(email):
-		return null
+		return [ERR_INVALID_PARAMETER, "INVALID_EMAIL"]
 
 	if not _is_password_valid(password):
-		return null
+		return [ERR_INVALID_PARAMETER, "INVALID_PASSWORD"]
 
 	var model: Models.AccountModel = await _database.row(
 		"SELECT id, email, password, access_at, created_at, updated_at FROM accounts WHERE email = ?",
@@ -25,10 +23,10 @@ func sign_in(email: String, password: String) -> Account:
 	)
 
 	if model == null:
-		return null
+		return [ERR_DOES_NOT_EXIST, "ACCOUNT_NOT_FOUND"]
 
 	if not Sha256.new().verify_password(password, model.password):
-		return null
+		return [ERR_UNAUTHORIZED, "INCORRECT_PASSWORD"]
 
 	var account: Account = Account.new(
 		model.id,
@@ -39,18 +37,18 @@ func sign_in(email: String, password: String) -> Account:
 		model.updated_at
 	)
 
-	return account
+	return [OK, account]
 
 
-func register(email: String, password: String, password_confirm: String) -> Account:
+func sign_up(email: String, password: String, password_confirm: String) -> Array:
 	if not _is_email_valid(email):
-		return null
+		return [ERR_INVALID_PARAMETER, "INVALID_EMAIL"]
 
 	if not _is_password_valid(password):
-		return null
+		return [ERR_INVALID_PARAMETER, "INVALID_PASSWORD"]
 
 	if password != password_confirm:
-		return null
+		return [ERR_INVALID_DATA, "PASSWORDS_DO_NOT_MATCH"]
 
 	var existing: Variant = await _database.scalar(
 		"SELECT COUNT(*) FROM accounts WHERE email = ?",
@@ -58,7 +56,7 @@ func register(email: String, password: String, password_confirm: String) -> Acco
 	)
 
 	if existing > 0:
-		return null
+		return [ERR_ALREADY_EXISTS, "EMAIL_ALREADY_REGISTERED"]
 
 	var hashed: String = Sha256.new().hash_password(password)
 	var now: int = _database.now()
@@ -69,7 +67,7 @@ func register(email: String, password: String, password_confirm: String) -> Acco
 	)
 
 	if result != OK:
-		return null
+		return [ERR_DATABASE_CANT_WRITE, "INTERNAL_ERROR"]
 
 	var model: Models.AccountModel = await _database.row(
 		"SELECT id, email, password, access_at, created_at, updated_at FROM accounts WHERE email = ?",
@@ -78,7 +76,7 @@ func register(email: String, password: String, password_confirm: String) -> Acco
 	)
 
 	if model == null:
-		return null
+		return [ERR_DOES_NOT_EXIST, "INTERNAL_ERROR"]
 
 	await update_updated_at(model.id)
 
@@ -91,7 +89,7 @@ func register(email: String, password: String, password_confirm: String) -> Acco
 		model.updated_at
 	)
 
-	return account
+	return [OK, account]
 
 
 func update_access_at(account_id: int) -> void:
