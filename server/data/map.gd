@@ -8,8 +8,7 @@ class_name MapData
 @export var bgm: String
 @export var bgs: String
 
-@export var width: int
-@export var height: int
+@export var size: Vector2i
 
 @export var characters_collide: bool
 

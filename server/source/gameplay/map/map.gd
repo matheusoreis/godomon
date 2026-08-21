@@ -3,13 +3,13 @@ class_name Map
 
 
 var id: int
+
 var identifier: String
 
 var bgm: String
 var bgs: String
 
-var width: int
-var height: int
+var size: Vector2i
 
 var characters_collide: bool
 
@@ -19,28 +19,27 @@ var collisions: Dictionary
 var _characters: Dictionary
 
 
-func _init(id: int, identifier: String, bgm: String, bgs: String, width: int, height: int, characters_collide: bool) -> void:
+func _init(id: int, identifier: String, bgm: String, bgs: String, size: Vector2i, characters_collide: bool) -> void:
 	self.id = id
 	self.identifier = identifier
 
 	self.bgm = bgm
 	self.bgs = bgs
 
-	self.width = width
-	self.height = height
+	self.size = size
 
 	self.characters_collide = characters_collide
 
 
 func pixel_size() -> Vector2i:
 	return Vector2i(
-		width * Constants.CELL_SIZE,
-		height * Constants.CELL_SIZE
+		size.x * Constants.CELL_SIZE,
+		size.y * Constants.CELL_SIZE
 	)
 
 
 func is_within_bounds(position: Vector2i) -> bool:
-	return position.x >= 0 and position.x < width and position.y >= 0 and position.y < height
+	return position.x >= 0 and position.x < size.x and position.y >= 0 and position.y < size.y
 
 
 func to_screen(cell: Vector2i) -> Vector2:

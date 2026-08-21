@@ -21,17 +21,15 @@ class AccountModel extends Models:
 
 class CharacterModel extends Models:
 	var id: int
+	var identifier: String
 
 	var account: int
 
-	var identifier: String
 	var spritesheet: String
 
 	var map: int
-
 	var cel_x: int
 	var cel_y: int
-
 	var facing_x: int
 	var facing_y: int
 
