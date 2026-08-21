@@ -20,7 +20,7 @@ const CELL_SIZE: int = 32
 
 const CELL_NONE: int = 0
 const CELL_FULL_BLOCK: int = 1
-const CELL_TOP: int = 2
+const CELL_UP: int = 2
 const CELL_RIGHT: int = 4
 const CELL_DOWN: int = 8
 const CELL_LEFT: int = 16
