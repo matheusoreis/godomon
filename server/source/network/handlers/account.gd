@@ -3,11 +3,9 @@ class_name AccountHandler
 
 
 var _network: Network
-
 var _accounts: AccountModule
 var _characters: CharacterModule
 var _maps: MapModule
-
 var _account_repository: AccountRepository
 
 
@@ -39,7 +37,7 @@ func list_characters() -> void:
 	var sender_id: int = _network.sender_id()
 
 	if not _accounts.has(sender_id):
-		_network.exec(sender_id, &"Alert", ["You need to be logged in"])
+		_network.exec(sender_id, &"Alert", ["NOT_LOGGED_IN"])
 		return
 
 	var account: Account = _accounts.account(sender_id)
@@ -52,7 +50,7 @@ func create_character(identifier: String, spritesheet: String) -> void:
 	var sender_id: int = _network.sender_id()
 
 	if not _accounts.has(sender_id):
-		_network.exec(sender_id, &"Alert", ["You need to be logged in"])
+		_network.exec(sender_id, &"Alert", ["NOT_LOGGED_IN"])
 		return
 
 	var account: Account = _accounts.account(sender_id)
@@ -64,15 +62,15 @@ func create_character(identifier: String, spritesheet: String) -> void:
 	if error_code != OK:
 		match data:
 			"INVALID_IDENTIFIER":
-				_network.exec(sender_id, &"Alert", ["Invalid identifier"])
+				_network.exec(sender_id, &"Alert", ["INVALID_IDENTIFIER"])
 			"IDENTIFIER_ALREADY_EXISTS":
-				_network.exec(sender_id, &"Alert", ["Identifier already exists"])
+				_network.exec(sender_id, &"Alert", ["IDENTIFIER_ALREADY_EXISTS"])
 			"INVALID_SPRITE":
-				_network.exec(sender_id, &"Alert", ["Invalid sprite"])
+				_network.exec(sender_id, &"Alert", ["INVALID_SPRITE"])
 			"DATABASE_ERROR":
-				_network.exec(sender_id, &"Alert", ["Database error"])
+				_network.exec(sender_id, &"Alert", ["DATABASE_ERROR"])
 			_:
-				_network.exec(sender_id, &"Alert", ["Failed to create character"])
+				_network.exec(sender_id, &"Alert", ["CREATE_CHARACTER_FAILED"])
 		return
 
 	var model: Models.CharacterModel = data
@@ -83,13 +81,13 @@ func delete_character(character_id: int) -> void:
 	var sender_id: int = _network.sender_id()
 
 	if not _accounts.has(sender_id):
-		_network.exec(sender_id, &"Alert", ["You need to be logged in"])
+		_network.exec(sender_id, &"Alert", ["NOT_LOGGED_IN"])
 		return
 
 	var account: Account = _accounts.account(sender_id)
 
 	if _characters.has(character_id):
-		_network.exec(sender_id, &"Alert", ["Cannot delete an online character"])
+		_network.exec(sender_id, &"Alert", ["CHARACTER_ONLINE"])
 		return
 
 	var result: Array = await _account_repository.delete_character(character_id, account.id)
@@ -99,11 +97,11 @@ func delete_character(character_id: int) -> void:
 	if error_code != OK:
 		match data:
 			"NOT_OWNER":
-				_network.exec(sender_id, &"Alert", ["Character does not belong to you"])
+				_network.exec(sender_id, &"Alert", ["NOT_OWNER"])
 			"DATABASE_ERROR":
-				_network.exec(sender_id, &"Alert", ["Database error"])
+				_network.exec(sender_id, &"Alert", ["DATABASE_ERROR"])
 			_:
-				_network.exec(sender_id, &"Alert", ["Failed to delete character"])
+				_network.exec(sender_id, &"Alert", ["DELETE_CHARACTER_FAILED"])
 		return
 
 	_network.exec(sender_id, &"DeleteCharacter", [character_id])
@@ -113,13 +111,13 @@ func select_character(character_id: int) -> void:
 	var sender_id: int = _network.sender_id()
 
 	if not _accounts.has(sender_id):
-		_network.exec(sender_id, &"Alert", ["You need to be logged in"])
+		_network.exec(sender_id, &"Alert", ["NOT_LOGGED_IN"])
 		return
 
 	var account: Account = _accounts.account(sender_id)
 
 	if _characters.has(character_id):
-		_network.exec(sender_id, &"Alert", ["Character already online"])
+		_network.exec(sender_id, &"Alert", ["CHARACTER_ALREADY_ONLINE"])
 		return
 
 	var result: Array = await _account_repository.select_character(character_id, account.id)
@@ -129,13 +127,13 @@ func select_character(character_id: int) -> void:
 	if error_code != OK:
 		match data:
 			"NOT_OWNER":
-				_network.exec(sender_id, &"Alert", ["Character does not belong to you"])
+				_network.exec(sender_id, &"Alert", ["NOT_OWNER"])
 			"CHARACTER_NOT_FOUND":
-				_network.exec(sender_id, &"Alert", ["Character not found"])
+				_network.exec(sender_id, &"Alert", ["CHARACTER_NOT_FOUND"])
 			"DATABASE_ERROR":
-				_network.exec(sender_id, &"Alert", ["Database error"])
+				_network.exec(sender_id, &"Alert", ["DATABASE_ERROR"])
 			_:
-				_network.exec(sender_id, &"Alert", ["Failed to select character"])
+				_network.exec(sender_id, &"Alert", ["SELECT_CHARACTER_FAILED"])
 		return
 
 	var model: Models.CharacterModel = data

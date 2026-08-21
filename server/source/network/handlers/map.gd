@@ -3,7 +3,6 @@ class_name MapHandler
 
 
 var _network: Network
-
 var _accounts: AccountModule
 var _characters: CharacterModule
 var _maps: MapModule
@@ -35,7 +34,7 @@ func map_data(map_id: int) -> void:
 
 	var map: Map = _maps.map(map_id)
 	if map == null:
-		_network.exec(sender_id, &"Alert", ["Map not found"])
+		_network.exec(sender_id, &"Alert", ["MAP_NOT_FOUND"])
 		return
 
 	var targets: Array = _characters.in_map(map_id)
@@ -73,22 +72,22 @@ func move_character(direction: Vector2i) -> void:
 	var sender_id: int = _network.sender_id()
 
 	if not _accounts.has(sender_id):
-		_network.exec(sender_id, &"Alert", ["You need to be logged in"])
+		_network.exec(sender_id, &"Alert", ["NOT_LOGGED_IN"])
 		return
 
 	if not _characters.has(sender_id):
-		_network.exec(sender_id, &"Alert", ["No character selected"])
+		_network.exec(sender_id, &"Alert", ["NO_CHARACTER_SELECTED"])
 		return
 
 	var character: Character = _characters.character(sender_id)
 	var map: Map = _maps.map(character.map)
 
 	if map == null:
-		_network.exec(sender_id, &"Alert", ["Map not found"])
+		_network.exec(sender_id, &"Alert", ["MAP_NOT_FOUND"])
 		return
 
 	if not _characters.move(sender_id, direction, map):
-		_network.exec(sender_id, &"Alert", ["Invalid movement"])
+		_network.exec(sender_id, &"Alert", ["INVALID_MOVEMENT"])
 		return
 
 	var targets: Array = _characters.in_map(map.id)
