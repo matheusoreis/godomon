@@ -27,12 +27,12 @@ func load_from_disk(map_id: int) -> bool:
 
 	var map_path: String = _map_data_path(map_id)
 	if not ResourceLoader.exists(map_path):
-		push_error("[MAPS] Mapa %d não encontrado: %s" % [map_id, map_path])
+		push_error("Mapa %d não encontrado: %s" % [map_id, map_path])
 		return false
 
 	var map_data: MapData = load(map_path)
 	if not map_data:
-		push_error("[MAPS] Falha ao carregar dados do mapa %d" % map_id)
+		push_error("Falha ao carregar dados do mapa %d" % map_id)
 		return false
 
 	var map: Map = Map.new(
@@ -48,7 +48,8 @@ func load_from_disk(map_id: int) -> bool:
 		map.import_collisions(map_data.collisions)
 
 	_maps[map_data.id] = map
-	print("[MAPS] Mapa %d carregado: %s (%dx%d) com %d colisões" % [
+
+	print("Mapa %d carregado: %s (%dx%d) com %d colisões" % [
 		map_id,
 		map.identifier,
 		map.size.x,
@@ -62,13 +63,13 @@ func load_from_disk(map_id: int) -> bool:
 func load_all_from_disk() -> void:
 	for map_id: int in _scan_directory_ids():
 		load_from_disk(map_id)
-	print("[MAPS] %d mapa(s) carregados." % _maps.size())
+	print("%d mapa(s) carregados." % _maps.size())
 
 
 func update_collisions(map_id: int, new_collisions: Dictionary[Vector2i, int]) -> void:
 	var map: Map = map(map_id)
 	if not map:
-		push_error("[MAPS] Mapa %d não encontrado" % map_id)
+		push_error("Mapa %d não encontrado" % map_id)
 		return
 
 	map.import_collisions(new_collisions)
@@ -76,14 +77,14 @@ func update_collisions(map_id: int, new_collisions: Dictionary[Vector2i, int]) -
 	var map_path: String = _map_data_path(map_id)
 	var map_data: MapData = load(map_path)
 	if not map_data:
-		push_error("[MAPS] Falha ao carregar MapData do mapa %d" % map_id)
+		push_error("Falha ao carregar MapData do mapa %d" % map_id)
 		return
 
 	map_data.collisions = new_collisions.duplicate()
 
 	var err: int = ResourceSaver.save(map_data, map_path)
 	if err != OK:
-		push_error("[MAPS] Falha ao salvar mapa %d: %s" % [map_id, error_string(err)])
+		push_error("Falha ao salvar mapa %d: %s" % [map_id, error_string(err)])
 		return
 
 
@@ -91,7 +92,7 @@ func _scan_directory_ids() -> Array[int]:
 	var ids: Array[int] = []
 	var dir: DirAccess = DirAccess.open(Constants.MAPS_DATA_DIRECTORY)
 	if not dir:
-		push_error("[MAPS] Não foi possível abrir: %s" % Constants.MAPS_DATA_DIRECTORY)
+		push_error("Não foi possível abrir: %s" % Constants.MAPS_DATA_DIRECTORY)
 		return ids
 
 	dir.list_dir_begin()
