@@ -3,6 +3,9 @@ class_name AuthHandler
 
 
 var _network: Network
+
+var _accounts: AccountModule
+
 var _auth_repository: AuthRepository
 
 
@@ -12,8 +15,11 @@ var functions: Array[Callable] = [
 ]
 
 
-func _init(network: Network, database: Database) -> void:
+func _init(network: Network, database: Database, accounts: AccountModule) -> void:
 	_network = network
+
+	_accounts = accounts
+
 	_auth_repository = AuthRepository.new(database)
 
 
@@ -28,7 +34,7 @@ func unregister() -> Error:
 func sign_in(email: String, password: String) -> void:
 	var sender_id: int = _network.sender_id()
 
-	if Accounts.has(sender_id):
+	if _accounts.has(sender_id):
 		_network.exec(sender_id, &"Alert", ["You are already logged in"])
 		return
 
@@ -52,11 +58,11 @@ func sign_in(email: String, password: String) -> void:
 
 	var account: Account = data
 
-	if Accounts.find_by_account_id(account.id) != null:
+	if _accounts.find_by_account_id(account.id) != null:
 		_network.exec(sender_id, &"Alert", ["This account is already online"])
 		return
 
-	Accounts.add(sender_id, account)
+	_accounts.add(sender_id, account)
 	await _auth_repository.update_access_at(account.id)
 
 	_network.exec(sender_id, &"SignIn", [])
@@ -65,7 +71,7 @@ func sign_in(email: String, password: String) -> void:
 func sign_up(email: String, password: String, password_confirm: String) -> void:
 	var sender_id: int = _network.sender_id()
 
-	if Accounts.has(sender_id):
+	if _accounts.has(sender_id):
 		_network.exec(sender_id, &"Alert", ["You are already logged in"])
 		return
 
@@ -90,6 +96,6 @@ func sign_up(email: String, password: String, password_confirm: String) -> void:
 		return
 
 	var account: Account = data
-	Accounts.add(sender_id, account)
+	_accounts.add(sender_id, account)
 
 	_network.exec(sender_id, &"SignUp", [])

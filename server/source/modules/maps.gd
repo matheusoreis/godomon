@@ -1,4 +1,5 @@
 extends Node
+class_name MapModule
 
 
 var _maps: Dictionary[int, Map] = {}

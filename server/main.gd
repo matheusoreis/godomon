@@ -5,8 +5,16 @@ class_name Main
 var _database: Database
 var _network: Network
 
+var _accounts: AccountModule
+var _characters: CharacterModule
+var _maps: MapModule
+
 
 func _ready() -> void:
+	_accounts = AccountModule.new()
+	_characters = CharacterModule.new()
+	_maps = MapModule.new()
+
 	if not _setup_database():
 		return
 
@@ -71,7 +79,7 @@ func _setup_network() -> bool:
 
 func _setup_handlers() -> bool:
 	var auth: AuthHandler = AuthHandler.new(
-		_network, _database
+		_network, _database, _accounts
 	)
 
 	var auth_err: Error = auth.register()
@@ -79,7 +87,7 @@ func _setup_handlers() -> bool:
 		return false
 
 	var account: AccountHandler = AccountHandler.new(
-		_network, _database
+		_network, _database, _accounts, _characters, _maps
 	)
 
 	var account_err: Error = account.register()

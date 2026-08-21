@@ -1,4 +1,5 @@
 extends Node
+class_name CharacterModule
 
 
 var _characters: Dictionary[int, Character] = {}
