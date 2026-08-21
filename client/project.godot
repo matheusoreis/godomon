@@ -12,7 +12,20 @@ config_version=5
 
 config/name="client"
 config/features=PackedStringArray("4.7", "Mobile")
-config/icon="res://icon.svg"
+config/icon="res://assets/icon.svg"
+
+[autoload]
+
+Constants="*uid://bgn57ritklo0c"
+Globals="*uid://drpxkut1hrfck"
+Network="*uid://c6nbvphrpvamb"
+Characters="*uid://bcewp8b8ek2vp"
+Maps="*uid://cgjfwunln3qdn"
+
+[debug]
+
+gdscript/warnings/shadowed_variable=0
+gdscript/warnings/shadowed_variable_base_class=0
 
 [display]
 
@@ -25,5 +38,6 @@ window/stretch/aspect="expand"
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="mobile"
