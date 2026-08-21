@@ -32,6 +32,8 @@ func _ready() -> void:
 		_on_client_disconnected
 	)
 
+	_maps.load_all_from_disk()
+
 
 func _physics_process(_delta: float) -> void:
 	if _database:

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="MapData" format=3 uid="uid://bhenk7nc6v4n5"]
+
+[ext_resource type="Script" uid="uid://cxoeal43gi536" path="res://data/map.gd" id="1_b4301"]
+
+[resource]
+script = ExtResource("1_b4301")
+id = 2
+identifier = "Viridian Town"
+size = Vector2i(62, 34)
+metadata/_custom_type_script = "uid://cxoeal43gi536"

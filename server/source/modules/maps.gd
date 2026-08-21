@@ -51,8 +51,8 @@ func load_from_disk(map_id: int) -> bool:
 	print("[MAPS] Mapa %d carregado: %s (%dx%d) com %d colisões" % [
 		map_id,
 		map.identifier,
-		map.width,
-		map.height,
+		map.size.x,
+		map.size.y,
 		map.collisions.size()
 	])
 
@@ -89,9 +89,9 @@ func update_collisions(map_id: int, new_collisions: Dictionary[Vector2i, int]) -
 
 func _scan_directory_ids() -> Array[int]:
 	var ids: Array[int] = []
-	var dir: DirAccess = DirAccess.open(Constants.MAPS_DIRECTORY_PATH)
+	var dir: DirAccess = DirAccess.open(Constants.MAPS_DATA_DIRECTORY)
 	if not dir:
-		push_error("[MAPS] Não foi possível abrir: %s" % Constants.MAPS_DIRECTORY_PATH)
+		push_error("[MAPS] Não foi possível abrir: %s" % Constants.MAPS_DATA_DIRECTORY)
 		return ids
 
 	dir.list_dir_begin()
@@ -108,4 +108,4 @@ func _scan_directory_ids() -> Array[int]:
 
 
 func _map_data_path(id: int) -> String:
-	return Constants.MAPS_DIRECTORY_PATH + "%d.tres" % id
+	return Constants.MAPS_DATA_DIRECTORY + "%d.tres" % id

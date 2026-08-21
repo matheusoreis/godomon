@@ -1,7 +1,7 @@
 extends Node
 
 
-const MAPS_DATA_DIRECTORY: String = ""
+const MAPS_DATA_DIRECTORY: String = "res://data/maps/"
 
 
 const DATABASE_PATH: String = "user://database/"

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="MapData" format=3 uid="uid://bltqnypbjmbpg"]
+
+[ext_resource type="Script" uid="uid://cxoeal43gi536" path="res://data/map.gd" id="1_8lflo"]
+
+[resource]
+script = ExtResource("1_8lflo")
+id = 1
+identifier = "Route 01"
+size = Vector2i(62, 34)
+metadata/_custom_type_script = "uid://cxoeal43gi536"
