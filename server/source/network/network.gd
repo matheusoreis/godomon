@@ -1,11 +1,25 @@
 extends Node
 
 
+signal client_connected(peer_id: int)
+signal client_disconnected(peer_id: int)
+
+
 var network: Multiplayer.Server
 
 
 func _ready() -> void:
 	network = Multiplayer.Server.new()
+
+	network.client_connected.connect(
+		func(peer_id: int) -> void:
+			client_connected.emit(peer_id)
+	)
+
+	network.client_disconnected.connect(
+		func(peer_id: int) -> void:
+			client_disconnected.emit(peer_id)
+	)
 
 
 func start() -> Error:
