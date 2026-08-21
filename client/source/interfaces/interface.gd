@@ -1,5 +1,5 @@
 extends Control
-class_name container
+class_name Interface
 
 
 func _ready() -> void:
