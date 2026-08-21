@@ -11,23 +11,19 @@ var _maps: MapModule
 var _account_repository: AccountRepository
 
 
-
 var functions: Array[Callable] = [
 	list_characters,
 	create_character,
 	delete_character,
-	select_character,
-	move_character,
+	select_character
 ]
 
 
 func _init(network: Network, database: Database, accounts: AccountModule, characters: CharacterModule, maps: MapModule) -> void:
 	_network = network
-
 	_accounts = accounts
 	_characters = characters
 	_maps = maps
-
 	_account_repository = AccountRepository.new(database)
 
 
@@ -47,7 +43,6 @@ func list_characters() -> void:
 		return
 
 	var account: Account = _accounts.account(sender_id)
-
 	var characters: Array[Models.CharacterModel] = await _account_repository.get_characters_by_account(account.id)
 
 	_network.exec(sender_id, &"ListCharacters", [characters])
@@ -156,35 +151,24 @@ func select_character(character_id: int) -> void:
 
 	_characters.add(sender_id, character)
 
-	_network.exec(sender_id, &"MapData", [])
-	_network.exec(sender_id, &"MapCollisions", [])
+	# Envia os dados do mapa
+	_network.exec(sender_id, &"MapData", [character.map])
 
-	_network.exec(sender_id, &"CharactersToCharacter", [])
-	_network.exec(sender_id, &"CharacterToCharacters", [])
+	# Envia o novo personagem para todos os outros no mapa
+	var targets: Array = _characters.in_map(character.map)
+	targets.erase(sender_id)
+
+	if not targets.is_empty():
+		var new_character_data: Array = [
+			sender_id,
+			character.identifier,
+			character.spritesheet,
+			character.map,
+			character.cell.x,
+			character.cell.y,
+			character.facing.x,
+			character.facing.y
+		]
+		_network.exec(targets, &"CharacterToCharacters", [new_character_data])
 
 	_network.exec(sender_id, &"SelectCharacter", [character_id])
-
-
-func move_character(direction: Vector2i) -> void:
-	var sender_id: int = _network.sender_id()
-
-	if not _accounts.has(sender_id):
-		_network.exec(sender_id, &"Alert", ["You need to be logged in"])
-		return
-
-	if not _characters.has(sender_id):
-		_network.exec(sender_id, &"Alert", ["No character selected"])
-		return
-
-	var character: Character = _characters.character(sender_id)
-	var map: Map = _maps.map(character.map)
-
-	if map == null:
-		_network.exec(sender_id, &"Alert", ["Map not found"])
-		return
-
-	if not _characters.move(sender_id, direction, map):
-		_network.exec(sender_id, &"Alert", ["Invalid movement"])
-		return
-
-	_network.exec(sender_id, &"MoveCharacter", [direction])

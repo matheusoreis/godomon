@@ -96,6 +96,14 @@ func _setup_handlers() -> bool:
 	if account_err != OK:
 		return false
 
+	var map: MapHandler = MapHandler.new(
+		_network, _accounts, _characters, _maps
+	)
+
+	var map_err: Error = map.register()
+	if map_err != OK:
+		return false
+
 	return true
 
 
