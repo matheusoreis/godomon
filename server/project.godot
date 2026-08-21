@@ -22,6 +22,9 @@ Globals="*uid://gaonaf7e6wry"
 Enums="*uid://cqqffja6storb"
 Database="*uid://dq5ai452flqaf"
 Network="*uid://uisgsrcpeg06"
+Accounts="*uid://bp20yfdr64wav"
+Characters="*uid://5w7fl4djao0g"
+Maps="*uid://dnrm6e7lhxu5o"
 
 [debug]
 
@@ -35,7 +38,7 @@ window/stretch/aspect="expand"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/multiplayer/plugin.cfg", "res://addons/network/plugin.cfg")
+enabled=PackedStringArray("res://addons/multiplayer/plugin.cfg")
 
 [physics]
 
