@@ -28,7 +28,7 @@ window/stretch/aspect="expand"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/network/plugin.cfg")
+enabled=PackedStringArray("res://addons/multiplayer/plugin.cfg", "res://addons/network/plugin.cfg")
 
 [physics]
 
