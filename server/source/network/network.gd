@@ -1,5 +1,4 @@
 extends Node
-class_name Network
 
 
 var network: Multiplayer.Server
