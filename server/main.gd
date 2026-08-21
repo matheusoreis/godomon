@@ -57,9 +57,9 @@ func _setup_handlers() -> bool:
 	return true
 
 
-func _on_client_connected() -> void:
-	pass
+func _on_client_connected(peer_id: int) -> void:
+	print("[NETWORK] Cliente %d conectado." % peer_id)
 
 
-func _on_client_disconnected() -> void:
-	pass
+func _on_client_disconnected(peer_id: int) -> void:
+	print("[NETWORK] Cliente %d desconectado." % peer_id)
