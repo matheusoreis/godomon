@@ -1,4 +1,5 @@
-extends Node
+extends RefCounted
+class_name Database
 
 
 enum Codes {
@@ -37,7 +38,11 @@ var _aslet: Aslet
 var _conn: AsletConn
 
 
-func _process(_delta: float) -> void:
+func _init() -> void:
+	_aslet = Aslet.new()
+
+
+func poll() -> void:
 	if _aslet:
 		_aslet.poll(Constants.DATABASE_POLL_TIME)
 
@@ -47,7 +52,6 @@ func create(path: String, filename: String, wal: bool = false) -> Error:
 
 	DirAccess.make_dir_recursive_absolute(path)
 
-	_aslet = Aslet.new()
 	var result: Array = _aslet.open(full_path).wait()
 	if result.is_empty() || result[0] != OK:
 		return FAILED

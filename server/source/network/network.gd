@@ -1,4 +1,5 @@
-extends Node
+extends RefCounted
+class_name Network
 
 
 signal client_connected(peer_id: int)
@@ -8,7 +9,7 @@ signal client_disconnected(peer_id: int)
 var network: Multiplayer.Server
 
 
-func _ready() -> void:
+func _init() -> void:
 	network = Multiplayer.Server.new()
 
 	network.client_connected.connect(
@@ -66,8 +67,5 @@ func kick(peer_id: int) -> void:
 	network.kick(peer_id)
 
 
-func _physics_process(_delta: float) -> void:
-	if network == null:
-		return
-
+func poll() -> void:
 	network.poll()

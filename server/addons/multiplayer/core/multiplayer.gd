@@ -18,6 +18,8 @@ func _init() -> void:
 
 
 func register(remote_funcs: Array[Callable]) -> Error:
+	var registered: Array[StringName] = []
+
 	for fn: Callable in remote_funcs:
 		var fn_name: StringName = fn.get_method()
 		if fn_name == '<anonymous lambda>':
@@ -28,6 +30,9 @@ func register(remote_funcs: Array[Callable]) -> Error:
 			return ERR_ALREADY_EXISTS
 
 		_lookup[fn_id] = [fn, _get_args_ty(fn.get_object(), fn_name)]
+		registered.append(fn_name)
+
+	print("%d método(s) registrado(s): %s" % [registered.size(), ", ".join(registered)])
 	return OK
 
 

@@ -3,12 +3,10 @@ class_name AccountRepository
 
 
 var _database: Database
-var _accounts: Accounts
 
 
-func _init(database: Database, accounts: Accounts) -> void:
+func _init(database: Database) -> void:
 	_database = database
-	_accounts = accounts
 
 
 func get_characters_by_account(account_id: int) -> Array[Models.CharacterModel]:
@@ -50,28 +48,21 @@ func character_identifier_exists(account_id: int, identifier: String) -> bool:
 	return result > 0
 
 
-func get_character_count(account_id: int) -> int:
-	var result: Variant = await _database.scalar(
-		"SELECT COUNT(*) FROM characters WHERE account = ?",
-		[account_id]
-	)
-
-	return result
-
-
-func create_character(account_id: int, identifier: String, spritesheet: String) -> bool:
+func create_character(account_id: int, identifier: String, spritesheet: String) -> Array:
 	if not _is_identifier_valid(identifier):
-		return false
+		return [ERR_INVALID_PARAMETER, "INVALID_IDENTIFIER"]
 
 	if await character_identifier_exists(account_id, identifier):
-		return false
+		return [ERR_ALREADY_EXISTS, "IDENTIFIER_ALREADY_EXISTS"]
 
 	if not Constants.AVALIABLE_SPRITES.has(spritesheet):
-		return false
+		return [ERR_INVALID_PARAMETER, "INVALID_SPRITE"]
 
 	var result: Error = await _database.exec(
 		"""
-		INSERT INTO characters (account, identifier, spritesheet, map, cell_x, cell_y, facing_x, facing_y, access_at, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+		INSERT INTO characters (account, identifier, spritesheet, map, cell_x, cell_y, facing_x, facing_y, access_at, created_at, updated_at)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		""",
 		[
 			account_id,
 			identifier,
@@ -87,56 +78,86 @@ func create_character(account_id: int, identifier: String, spritesheet: String) 
 		]
 	)
 
-	return result == OK
+	if result != OK:
+		return [ERR_DATABASE_CANT_WRITE, "DATABASE_ERROR"]
+
+	var model: Models.CharacterModel = await _database.row(
+		"SELECT id, account, identifier, spritesheet, map, cell_x, cell_y, facing_x, facing_y, access_at, created_at, updated_at FROM characters WHERE account = ? AND identifier = ?",
+		[account_id, identifier],
+		Models.CharacterModel
+	)
+
+	if model == null:
+		return [ERR_DOES_NOT_EXIST, "DATABASE_ERROR"]
+
+	return [OK, model]
 
 
-func delete_character(character_id: int, account_id: int) -> bool:
+func delete_character(character_id: int, account_id: int) -> Array:
 	if not await is_character_owner(character_id, account_id):
-		return false
+		return [ERR_UNAUTHORIZED, "NOT_OWNER"]
 
 	var result: Error = await _database.exec(
 		"DELETE FROM characters WHERE id = ? AND account = ?",
 		[character_id, account_id]
 	)
 
-	return result == OK
+	if result != OK:
+		return [ERR_DATABASE_CANT_WRITE, "DATABASE_ERROR"]
+
+	return [OK, null]
 
 
-func select_character(character_id: int, account_id: int) -> Models.CharacterModel:
+func select_character(character_id: int, account_id: int) -> Array:
 	if not await is_character_owner(character_id, account_id):
-		return null
+		return [ERR_UNAUTHORIZED, "NOT_OWNER"]
 
 	var model: Models.CharacterModel = await get_character_by_id(character_id)
 	if model == null:
-		return null
+		return [ERR_DOES_NOT_EXIST, "CHARACTER_NOT_FOUND"]
 
 	await _database.exec(
 		"UPDATE characters SET access_at = ? WHERE id = ?",
 		[_database.now(), character_id]
 	)
 
-	return model
+	return [OK, model]
 
 
-func update_character_position(character_id: int, cell: Vector2i, facing: Vector2i) -> void:
-	await _database.exec(
+func update_character_position(character_id: int, cell: Vector2i, facing: Vector2i) -> Array:
+	var result: Error = await _database.exec(
 		"UPDATE characters SET cell_x = ?, cell_y = ?, facing_x = ?, facing_y = ? WHERE id = ?",
 		[cell.x, cell.y, facing.x, facing.y, character_id]
 	)
 
+	if result != OK:
+		return [ERR_DATABASE_CANT_WRITE, "DATABASE_ERROR"]
 
-func update_access(character_id: int) -> void:
-	await _database.exec(
+	return [OK, null]
+
+
+func update_access(character_id: int) -> Array:
+	var result: Error = await _database.exec(
 		"UPDATE characters SET access_at = ? WHERE id = ?",
 		[_database.now(), character_id]
 	)
 
+	if result != OK:
+		return [ERR_DATABASE_CANT_WRITE, "DATABASE_ERROR"]
 
-func update_updated(character_id: int) -> void:
-	await _database.exec(
+	return [OK, null]
+
+
+func update_updated(character_id: int) -> Array:
+	var result: Error = await _database.exec(
 		"UPDATE characters SET updated_at = ? WHERE id = ?",
 		[_database.now(), character_id]
 	)
+
+	if result != OK:
+		return [ERR_DATABASE_CANT_WRITE, "DATABASE_ERROR"]
+
+	return [OK, null]
 
 
 func _is_identifier_valid(identifier: String) -> bool:

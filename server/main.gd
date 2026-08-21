@@ -2,6 +2,10 @@ extends Node2D
 class_name Main
 
 
+var _database: Database
+var _network: Network
+
+
 func _ready() -> void:
 	if not _setup_database():
 		return
@@ -12,19 +16,29 @@ func _ready() -> void:
 	if not _setup_handlers():
 		return
 
-	Network.client_connected.connect(
+	_network.client_connected.connect(
 		_on_client_connected
 	)
 
-	Network.client_disconnected.connect(
+	_network.client_disconnected.connect(
 		_on_client_disconnected
 	)
 
 
+func _physics_process(_delta: float) -> void:
+	if _database:
+		_database.poll()
+
+	if _network:
+		_network.poll()
+
+
 func _setup_database() -> bool:
+	_database = Database.new()
+
 	print("Iniciando SQLite...")
 
-	var err: Error = Database.create(
+	var err: Error = _database.create(
 		Constants.DATABASE_PATH,
 		Constants.DATABASE_FILENAME
 	)
@@ -38,13 +52,15 @@ func _setup_database() -> bool:
 
 
 func _setup_network() -> bool:
+	_network = Network.new()
+
 	print("Iniciando servidor em %s:%d (máx. %d clientes)..." % [
 		Constants.NETWORK_HOST,
 		Constants.NETWORK_PORT,
 		Constants.MAX_PEERS,
 	])
 
-	var err: Error = Network.start()
+	var err: Error = _network.start()
 	if err != OK:
 		push_error("Erro ao iniciar o servidor (%s)." % error_string(err))
 		return false
@@ -54,6 +70,22 @@ func _setup_network() -> bool:
 
 
 func _setup_handlers() -> bool:
+	var auth: AuthHandler = AuthHandler.new(
+		_network, _database
+	)
+
+	var auth_err: Error = auth.register()
+	if auth_err != OK:
+		return false
+
+	var account: AccountHandler = AccountHandler.new(
+		_network, _database
+	)
+
+	var account_err: Error = account.register()
+	if account_err != OK:
+		return false
+
 	return true
 
 
