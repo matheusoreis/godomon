@@ -2,5 +2,18 @@
 
 [ext_resource type="Script" uid="uid://drdin3vffmrt1" path="res://source/gameplay/map/map.gd" id="1_4cnpj"]
 
-[node name="Map" type="Node2D" unique_id=238508910]
+[node name="Map" type="Node2D" unique_id=238508910 node_paths=PackedStringArray("tilemap_layers")]
 script = ExtResource("1_4cnpj")
+tilemap_layers = [NodePath("Ground1"), NodePath("Ground2"), NodePath("Below1"), NodePath("Below2"), NodePath("Above1"), NodePath("Above2")]
+
+[node name="Ground1" type="TileMapLayer" parent="." unique_id=164588481]
+
+[node name="Ground2" type="TileMapLayer" parent="." unique_id=430304782]
+
+[node name="Below1" type="TileMapLayer" parent="." unique_id=138210692]
+
+[node name="Below2" type="TileMapLayer" parent="." unique_id=58644488]
+
+[node name="Above1" type="TileMapLayer" parent="." unique_id=325605420]
+
+[node name="Above2" type="TileMapLayer" parent="." unique_id=565516016]
