@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://bgjbji0ualsfy"]
+
+[ext_resource type="Script" uid="uid://ddi7rlfinq6em" path="res://source/interfaces/shared/alert.gd" id="1_x4pn5"]
+
+[node name="Alert" type="Control" unique_id=380022773]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_x4pn5")
+metadata/_custom_type_script = "uid://cpos6ynxqyjgn"

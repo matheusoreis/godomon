@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://cd12e3r2k86ew"]
+
+[ext_resource type="Script" uid="uid://bs4rthq8p2pbo" path="res://source/interfaces/shared/confirmation.gd" id="1_wavr6"]
+
+[node name="Confirmation" type="Control" unique_id=773346591]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_wavr6")
+metadata/_custom_type_script = "uid://cpos6ynxqyjgn"

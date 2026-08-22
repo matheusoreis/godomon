@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://b8j35kp5rixgx"]
+
+[ext_resource type="Script" uid="uid://d1w30pg3atump" path="res://source/interfaces/shared/ammount.gd" id="1_hlog6"]
+
+[node name="Ammount" type="Control" unique_id=941774448]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_hlog6")
+metadata/_custom_type_script = "uid://cpos6ynxqyjgn"

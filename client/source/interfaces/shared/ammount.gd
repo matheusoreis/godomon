@@ -1,0 +1,2 @@
+extends Interface
+class_name AmmountInterface
