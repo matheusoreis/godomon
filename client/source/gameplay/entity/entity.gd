@@ -12,7 +12,7 @@ var cell: Vector2i
 var facing: Vector2i
 
 
-func _init(
+func setup(
 	id: int,
 	identifier: String,
 	spritesheet: String,

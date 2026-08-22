@@ -5,3 +5,9 @@
 [node name="Character" type="Node2D" unique_id=261549935]
 script = ExtResource("1_uctmd")
 metadata/_custom_type_script = "uid://ci0y80783nen4"
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=335272584]
+unique_name_in_owner = true
+offset = Vector2(0, -23)
+hframes = 3
+vframes = 4
