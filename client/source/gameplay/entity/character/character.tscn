@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://b54aqnh1wj3ei"]
+
+[ext_resource type="Script" uid="uid://bmm8xx4fn6788" path="res://source/gameplay/entity/character/character.gd" id="1_uctmd"]
+
+[node name="Character" type="Node2D" unique_id=261549935]
+script = ExtResource("1_uctmd")
+metadata/_custom_type_script = "uid://ci0y80783nen4"
