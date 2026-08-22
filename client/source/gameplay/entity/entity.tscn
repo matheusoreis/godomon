@@ -4,3 +4,9 @@
 
 [node name="Entity" type="Node2D" unique_id=1633590919]
 script = ExtResource("1_ix6y8")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2145085417]
+unique_name_in_owner = true
+offset = Vector2(0, -23)
+hframes = 3
+vframes = 4
