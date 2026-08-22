@@ -114,10 +114,10 @@ func _can_pass_tiles(from: Vector2i, to: Vector2i, direction: Vector2i) -> bool:
 	var from_flag: int = collision_flag(from)
 	var to_flag: int = collision_flag(to)
 
-	if (from_flag & Constants.CELL_COLLISION_FULL_BLOCK) != 0:
+	if (from_flag & Constants.CELL_FULL_BLOCK) != 0:
 		return false
 
-	if (to_flag & Constants.CELL_COLLISION_FULL_BLOCK) != 0:
+	if (to_flag & Constants.CELL_FULL_BLOCK) != 0:
 		return false
 
 	var direction_flag: int = _direction_to_flag(direction)
